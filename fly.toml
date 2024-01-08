@@ -1,4 +1,5 @@
 app = "planahead"
+primary_region = "mad"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
