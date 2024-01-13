@@ -77,6 +77,7 @@ module.exports = {
         "prettier",
       ],
       rules: {
+        "no-empty-interface": false,
         "import/order": [
           "error",
           {
