@@ -77,7 +77,7 @@ module.exports = {
         "prettier",
       ],
       rules: {
-        "no-empty-interface": false,
+        "@typescript-eslint/no-empty-interface": 0,
         "import/order": [
           "error",
           {

@@ -6,10 +6,10 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-
 import { verifyLogin } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
@@ -90,6 +90,7 @@ export default function LoginPage() {
               <Input
                 ref={emailRef}
                 id="email"
+                // eslint-disable-next-line jsx-a11y/no-autofocus
                 autoFocus={true}
                 name="email"
                 type="email"
