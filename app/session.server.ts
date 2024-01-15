@@ -44,7 +44,7 @@ export async function getUser(request: Request) {
 
 export async function requireAnonymous(
   request: Request,
-  redirectTo = "/notes",
+  redirectTo = "/plans",
 ) {
   const userId = await getUserId(request);
   if (userId) {
