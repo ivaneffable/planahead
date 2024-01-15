@@ -86,44 +86,41 @@ export default function LoginPage() {
         <Form method="post" className="space-y-6">
           <div>
             <Label htmlFor="email">Email address</Label>
-            <div className="mt-1">
-              <Input
-                ref={emailRef}
-                id="email"
-                // eslint-disable-next-line jsx-a11y/no-autofocus
-                autoFocus={true}
-                name="email"
-                type="email"
-                autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
-                aria-describedby="email-error"
-              />
-              {actionData?.errors?.email ? (
-                <div className="pt-1 text-red-700" id="email-error">
-                  {actionData.errors.email}
-                </div>
-              ) : null}
-            </div>
+            <Input
+              ref={emailRef}
+              id="email"
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus={true}
+              name="email"
+              type="email"
+              autoComplete="email"
+              aria-invalid={actionData?.errors?.email ? true : undefined}
+              aria-describedby="email-error"
+            />
+            {actionData?.errors?.email ? (
+              <div className="pt-1 text-red-700" id="email-error">
+                {actionData.errors.email}
+              </div>
+            ) : null}
           </div>
 
           <div>
             <Label htmlFor="password">Password</Label>
-            <div className="mt-1">
-              <Input
-                id="password"
-                ref={passwordRef}
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                aria-invalid={actionData?.errors?.password ? true : undefined}
-                aria-describedby="password-error"
-              />
-              {actionData?.errors?.password ? (
-                <div className="pt-1 text-red-700" id="password-error">
-                  {actionData.errors.password}
-                </div>
-              ) : null}
-            </div>
+
+            <Input
+              id="password"
+              ref={passwordRef}
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              aria-invalid={actionData?.errors?.password ? true : undefined}
+              aria-describedby="password-error"
+            />
+            {actionData?.errors?.password ? (
+              <div className="pt-1 text-red-700" id="password-error">
+                {actionData.errors.password}
+              </div>
+            ) : null}
           </div>
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
@@ -133,7 +130,7 @@ export default function LoginPage() {
           <div className="text-center text-sm text-gray-500">
             Don&apos;t have an account?{" "}
             <Link
-              className="text-blue-500 underline"
+              className="underline"
               to={{
                 pathname: "/join",
                 search: searchParams.toString(),
