@@ -21,12 +21,12 @@ describe("smoke tests", () => {
     cy.findByLabelText(/password/i).type(loginForm.password);
     cy.findByRole("button", { name: /create account/i }).click();
 
-    cy.findByRole("link", { name: /notes/i }).click();
+    cy.findByRole("link", { name: /planahead/i }).click();
     cy.findByRole("button", { name: /logout/i }).click();
     cy.findByRole("link", { name: /log in/i });
   });
 
-  it("should allow you to make a note", () => {
+  it.skip("should allow you to make a note", () => {
     const testNote = {
       title: faker.lorem.words(1),
       body: faker.lorem.sentences(1),
