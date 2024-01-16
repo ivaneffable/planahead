@@ -29,6 +29,26 @@ declare global {
       cleanupUser: typeof cleanupUser;
 
       /**
+       * Whitelist the provided @user
+       *
+       * @returns {typeof whitelistTestUser}
+       * @memberof Chainable
+       * @example
+       *    cy.whitelistUser({ email: 'whatever@example.com' })
+       */
+      whitelistUser: typeof whitelistTestUser;
+
+      /**
+       * Clean the whitelisted @user
+       *
+       * @returns {typeof cleanWhitelistedUser}
+       * @memberof Chainable
+       * @example
+       *    cy.cleanWhitelistedUser({ email: 'whatever@example.com' })
+       */
+      cleanWhitelistedUser: typeof cleanWhitelistedUser;
+
+      /**
        * Extends the standard visit command to wait for the page to load
        *
        * @returns {typeof visitAndCheck}
@@ -58,6 +78,18 @@ function login({
     cy.setCookie("__session", cookieValue);
   });
   return cy.get("@user");
+}
+
+function whitelistTestUser({ email }: { email: string }) {
+  cy.exec(
+    `npx ts-node -r tsconfig-paths/register ./cypress/support/whitelist-user.ts "${email}"`,
+  );
+}
+
+function cleanWhitelistedUser({ email }: { email: string }) {
+  cy.exec(
+    `npx ts-node -r tsconfig-paths/register ./cypress/support/delete-whitelist.ts "${email}"`,
+  );
 }
 
 function cleanupUser({ email }: { email?: string } = {}) {
@@ -94,5 +126,7 @@ function visitAndCheck(url: string, waitTime = 1000) {
 export const registerCommands = () => {
   Cypress.Commands.add("login", login);
   Cypress.Commands.add("cleanupUser", cleanupUser);
+  Cypress.Commands.add("whitelistUser", whitelistTestUser);
+  Cypress.Commands.add("cleanWhitelistedUser", cleanWhitelistedUser);
   Cypress.Commands.add("visitAndCheck", visitAndCheck);
 };
