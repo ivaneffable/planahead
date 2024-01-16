@@ -1,13 +1,22 @@
 import { faker } from "@faker-js/faker";
 
+const TEST_USER = {
+  email: "user@example.com",
+};
+
 describe("smoke tests", () => {
+  beforeEach(() => {
+    cy.whitelistUser(TEST_USER);
+  });
+
   afterEach(() => {
     cy.cleanupUser();
+    cy.cleanWhitelistedUser(TEST_USER);
   });
 
   it("should allow you to register and login", () => {
     const loginForm = {
-      email: "user@example.com",
+      ...TEST_USER,
       password: faker.internet.password(),
     };
 
