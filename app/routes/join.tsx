@@ -10,7 +10,7 @@ import { useEffect, useRef } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { createUser, getUserByEmail } from "~/models/user.server";
+import { createUser, isUserAllowedToJoin } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
 
@@ -47,12 +47,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  const existingUser = await getUserByEmail(email);
-  if (existingUser) {
+  const allowedToJoin = await isUserAllowedToJoin(email);
+  if (!allowedToJoin) {
     return json(
       {
         errors: {
-          email: "A user already exists with this email",
+          email: "This email cannot be used to create an account",
           password: null,
         },
       },

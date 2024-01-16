@@ -28,6 +28,18 @@ export async function createUser(email: User["email"], password: string) {
   });
 }
 
+export async function isUserAllowedToJoin(email: User["email"]) {
+  const isEmailAllowed =
+    (await prisma.userWhiteList.count({
+      where: { email },
+    })) === 1;
+  if (!isEmailAllowed) {
+    return false;
+  }
+  console.log("getUserByEmail", await getUserByEmail(email));
+  return !(await getUserByEmail(email));
+}
+
 export async function deleteUserByEmail(email: User["email"]) {
   return prisma.user.delete({ where: { email } });
 }

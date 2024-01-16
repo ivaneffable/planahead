@@ -25,6 +25,11 @@ model Password {
   userId String @unique
 }
 
+model UserWhiteList {
+  id    String @id @default(cuid())
+  email String @unique
+}
+
 model Note {
   id    String @id @default(cuid())
   title String
