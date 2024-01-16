@@ -36,7 +36,6 @@ export async function isUserAllowedToJoin(email: User["email"]) {
   if (!isEmailAllowed) {
     return false;
   }
-  console.log("getUserByEmail", await getUserByEmail(email));
   return !(await getUserByEmail(email));
 }
 
