@@ -23,6 +23,10 @@ export default function PlansPage() {
         </Form>
       </header>
 
+      <nav className="flex items-center justify-between bg-slate-700 p-2">
+        <Link to="new">New Plan</Link>
+      </nav>
+
       <main className="flex h-full p-2">
         <Outlet />
       </main>

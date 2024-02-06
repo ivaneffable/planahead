@@ -7,7 +7,8 @@ export async function searchText(text: string, referer: string) {
         "Content-Type": "application/json",
         referer,
         "X-Goog-Api-Key": process.env.GOOGLE_MAPS_API_KEY!,
-        "X-Goog-FieldMask": "places.id,places.displayName.text,places.location",
+        "X-Goog-FieldMask":
+          "places.id,places.displayName.text,places.location,places.formattedAddress",
       },
       body: JSON.stringify({
         textQuery: text,
@@ -18,8 +19,5 @@ export async function searchText(text: string, referer: string) {
 
   const json = await response.json();
 
-  json.places.map((p: any) => {
-    console.log(p.location);
-    console.log(p.displayName);
-  });
+  return json.places as GooglePlace[];
 }
