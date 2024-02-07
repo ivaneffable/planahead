@@ -59,17 +59,22 @@ export default function NewPlanPage() {
   }, [map, places[0]?.id]);
 
   useEffect(() => {
-    if (isSubmitting) {
-      formRef.current?.reset();
+    if (isSubmitting && formRef.current) {
+      formRef.current.reset();
+      const formElements = formRef.current.elements;
+      const inputElement = formElements[
+        "where" as keyof typeof formElements
+      ] as HTMLInputElement;
+      inputElement.blur();
     }
   }, [isSubmitting]);
 
   return (
     <Form ref={formRef} method="post" className="flex flex-col w-full">
       <div className="pb-1">
-        <Label htmlFor="email">Where?</Label>
+        <Label htmlFor="where">Where?</Label>
         <Input
-          id="email"
+          id="where"
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={true}
           autoComplete="off"
