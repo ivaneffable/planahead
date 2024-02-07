@@ -8,7 +8,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
+import { APIProvider } from "@vis.gl/react-google-maps";
 
 import { getUser } from "~/session.server";
 import stylesheet from "~/tailwind.css";
@@ -19,10 +21,16 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({ user: await getUser(request) });
+  return json({
+    env: {
+      GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+    },
+    user: await getUser(request),
+  });
 };
 
 export default function App() {
+  const { env } = useLoaderData<typeof loader>();
   return (
     <html lang="en" className="h-full">
       <head>
@@ -32,7 +40,9 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <Outlet />
+        <APIProvider apiKey={env.GOOGLE_MAPS_API_KEY!}>
+          <Outlet />
+        </APIProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

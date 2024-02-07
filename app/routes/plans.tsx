@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link, Outlet } from "@remix-run/react";
 
 import { Button } from "~/components/ui/button";
 import { requireUserId } from "~/session.server";
@@ -23,7 +23,13 @@ export default function PlansPage() {
         </Form>
       </header>
 
-      <main className="flex h-full bg-white"></main>
+      <nav className="flex items-center justify-between bg-slate-700 p-2">
+        <Link to="new">New Plan</Link>
+      </nav>
+
+      <main className="flex h-full p-2">
+        <Outlet />
+      </main>
     </div>
   );
 }
