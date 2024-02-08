@@ -3,12 +3,12 @@ import { json } from "@remix-run/node";
 import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { useGeolocation } from "@uidotdev/usehooks";
 import { Map, Marker, useMap } from "@vis.gl/react-google-maps";
+import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ClientOnly } from "remix-utils/client-only";
 
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { searchText } from "~/lib/google/places";
 import { requireUserId } from "~/session.server";
 
@@ -78,10 +78,12 @@ export default function NewPlanPage() {
     <Form ref={formRef} method="post" className="flex flex-col w-full">
       <input type="hidden" name="latitude" value={latitude || undefined} />
       <input type="hidden" name="longitude" value={longitude || undefined} />
-      <div className="pb-1">
-        <Label htmlFor="where">Where?</Label>
+      <div className="mb-1 relative">
+        <Search className="absolute left-2 m-auto top-0 bottom-0 h-4 w-4 " />
         <Input
           id="where"
+          placeholder="where we going?"
+          className="pl-8"
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={true}
           autoComplete="off"
