@@ -15,13 +15,18 @@ import { requireUserId } from "~/session.server";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const placeQuery = formData.get("placeQuery")?.toString();
+  const latitude = formData.get("latitude")?.toString();
+  const longitude = formData.get("longitude")?.toString();
+
   const referer = request.headers.get("referer");
 
   if (!placeQuery || !referer) {
     return json({ status: 400, places: [] });
   }
 
-  const places = await searchText(placeQuery, referer);
+  const locationBias =
+    latitude && longitude ? { latitude, longitude } : undefined;
+  const places = await searchText(placeQuery, referer, locationBias);
   return json({ status: 200, places });
 };
 
@@ -71,6 +76,8 @@ export default function NewPlanPage() {
 
   return (
     <Form ref={formRef} method="post" className="flex flex-col w-full">
+      <input type="hidden" name="latitude" value={latitude || undefined} />
+      <input type="hidden" name="longitude" value={longitude || undefined} />
       <div className="pb-1">
         <Label htmlFor="where">Where?</Label>
         <Input

@@ -1,4 +1,8 @@
-export async function searchText(text: string, referer: string) {
+export async function searchText(
+  text: string,
+  referer: string,
+  locationBias?: { latitude: string; longitude: string },
+) {
   const response = await fetch(
     "https://places.googleapis.com/v1/places:searchText",
     {
@@ -13,6 +17,12 @@ export async function searchText(text: string, referer: string) {
       body: JSON.stringify({
         textQuery: text,
         maxResultCount: 3,
+        locationBias: {
+          circle: {
+            center: locationBias,
+            radius: 500.0,
+          },
+        },
       }),
     },
   );
