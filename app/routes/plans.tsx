@@ -24,7 +24,7 @@ export default function PlansPage() {
       </header>
 
       <nav className="flex items-center justify-between bg-slate-700 p-2">
-        <Link to="new">New Plan</Link>
+        <Link to="new-plan">New Plan</Link>
       </nav>
 
       <main className="flex h-full p-2">
