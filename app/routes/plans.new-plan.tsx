@@ -123,7 +123,7 @@ export default function NewPlanPlace() {
           <Input
             id="where"
             placeholder="where we going?"
-            className="pl-8"
+            className="pl-8 text-lg"
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus={true}
             autoComplete="off"
@@ -208,14 +208,16 @@ export default function NewPlanPlace() {
           name="longitude"
           value={selectedPlace?.location.longitude}
         />
-        <Button
-          disabled={!selectedPlace}
-          className="px-4 py-2"
-          name="_action"
-          value="add-place"
-        >
-          Add Plan
-        </Button>
+        <div className="flex justify-center w-full">
+          <Button
+            disabled={!selectedPlace}
+            className="px-4 py-2 m-1 w-1/2 text-lg"
+            name="_action"
+            value="add-place"
+          >
+            Add Plan
+          </Button>
+        </div>
       </Form>
     </div>
   );
