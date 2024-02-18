@@ -1,83 +1,24 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useNavigation } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import { useGeolocation } from "@uidotdev/usehooks";
 import { Map, Marker, useMap } from "@vis.gl/react-google-maps";
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { ClientOnly } from "remix-utils/client-only";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
-import { searchText } from "~/lib/google/places";
-import { createPlan } from "~/models/plans.server";
-import { requireUserId } from "~/session.server";
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const userId = await requireUserId(request);
-  const formData = await request.formData();
-  const action = formData.get("_action")?.toString();
-
-  if (action === "add-place") {
-    const placeId = formData.get("placeId")?.toString();
-    const name = formData.get("name")?.toString();
-    const address = formData.get("address")?.toString();
-    const latitude = formData.get("latitude")?.toString();
-    const longitude = formData.get("longitude")?.toString();
-
-    if (!placeId || !name || !address || !latitude || !longitude) {
-      return json({ status: 400, places: [] });
-    }
-    const { id } = await createPlan(
-      {
-        placeId,
-        name,
-        address,
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude),
-      },
-      userId,
-    );
-
-    return redirect(`/plans/${id}`);
-  }
-
-  const placeQuery = formData.get("placeQuery")?.toString();
-  const latitude = formData.get("latitude")?.toString();
-  const longitude = formData.get("longitude")?.toString();
-
-  const referer = request.headers.get("referer");
-
-  if (!placeQuery || !referer) {
-    return json({ status: 400, places: [] });
-  }
-
-  const locationBias =
-    latitude && longitude ? { latitude, longitude } : undefined;
-  const places = await searchText(placeQuery, referer, locationBias);
-  return json({ status: 200, places });
-};
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await requireUserId(request);
-  return json({
-    env: {
-      GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
-    },
-  });
-};
-
-export default function NewPlanPlace() {
-  const [selectedPlace, setSelectedPlace] = useState<GooglePlace>();
+interface Props {
+  places: GooglePlace[];
+}
+function PlanMap(props: Props) {
+  const { places } = props;
   const map = useMap();
-  const { latitude, longitude } = useGeolocation();
   const navigation = useNavigation();
-  const actionData = useActionData<typeof action>();
+  const [selectedPlace, setSelectedPlace] = useState<GooglePlace>();
+  const { latitude, longitude } = useGeolocation();
+
   const formRef = useRef<HTMLFormElement>(null);
-
-  const places = actionData?.places || [];
-
   const isSubmitting = navigation.state === "submitting";
 
   useEffect(() => {
@@ -159,30 +100,26 @@ export default function NewPlanPlace() {
         ))}
 
         <div className="flex flex-1 pt-2 pb-2">
-          <ClientOnly>
-            {() => (
-              <Map
-                className="rounded-lg flex-1"
-                zoom={15}
-                center={
-                  latitude && longitude
-                    ? { lat: latitude, lng: longitude }
-                    : { lat: 0, lng: 0 }
-                }
-                gestureHandling={"greedy"}
-                disableDefaultUI={true}
-              >
-                {selectedPlace ? (
-                  <Marker
-                    position={{
-                      lat: selectedPlace.location.latitude,
-                      lng: selectedPlace.location.longitude,
-                    }}
-                  />
-                ) : null}
-              </Map>
-            )}
-          </ClientOnly>
+          <Map
+            className="rounded-lg flex-1"
+            zoom={15}
+            center={
+              latitude && longitude
+                ? { lat: latitude, lng: longitude }
+                : { lat: 0, lng: 0 }
+            }
+            gestureHandling={"greedy"}
+            disableDefaultUI={true}
+          >
+            {selectedPlace ? (
+              <Marker
+                position={{
+                  lat: selectedPlace.location.latitude,
+                  lng: selectedPlace.location.longitude,
+                }}
+              />
+            ) : null}
+          </Map>
         </div>
       </Form>
 
@@ -222,3 +159,5 @@ export default function NewPlanPlace() {
     </div>
   );
 }
+
+export default PlanMap;
