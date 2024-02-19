@@ -16,7 +16,7 @@ function PlanMap(props: Props) {
   const map = useMap();
   const navigation = useNavigation();
   const [selectedPlace, setSelectedPlace] = useState<GooglePlace>();
-  const { latitude, longitude } = useGeolocation();
+  const { latitude, longitude } = useGeolocation({timeout: 100});
 
   const formRef = useRef<HTMLFormElement>(null);
   const isSubmitting = navigation.state === "submitting";
