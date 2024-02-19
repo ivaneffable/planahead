@@ -156,14 +156,23 @@ function PlanMap(props: Props) {
           name="longitude"
           value={selectedPlace?.location.longitude}
         />
-        <div className="flex justify-center w-full">
+        <div className="flex justify-around w-full">
+          <Button
+            disabled={!selectedPlace}
+            className="px-4 py-2 m-1 w-1/2 text-lg"
+            name="_action"
+            value="add-place"
+            variant="secondary"
+          >
+            Add Plan
+          </Button>
           <Button
             disabled={!selectedPlace}
             className="px-4 py-2 m-1 w-1/2 text-lg"
             name="_action"
             value="add-place"
           >
-            Add Plan
+            More Details
           </Button>
         </div>
       </Form>
