@@ -1,5 +1,4 @@
 import { Form, useNavigation } from "@remix-run/react";
-import { useGeolocation } from "@uidotdev/usehooks";
 import { Map, Marker, useMap } from "@vis.gl/react-google-maps";
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -8,15 +7,19 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 
+import { useDeviceGeolocation } from "../plans";
+
+const BARCELONA_LAT_LONG = { lat: 41.390205, lng: 2.154007 };
+
 interface Props {
   places: GooglePlace[];
 }
 function PlanMap(props: Props) {
   const { places } = props;
+  const { deviceLatitude, deviceLongitude } = useDeviceGeolocation();
   const map = useMap();
   const navigation = useNavigation();
   const [selectedPlace, setSelectedPlace] = useState<GooglePlace>();
-  const { latitude, longitude } = useGeolocation({timeout: 100});
 
   const formRef = useRef<HTMLFormElement>(null);
   const isSubmitting = navigation.state === "submitting";
@@ -57,8 +60,16 @@ function PlanMap(props: Props) {
   return (
     <div className="flex flex-col w-full">
       <Form ref={formRef} method="post" className="flex flex-col w-full h-full">
-        <input type="hidden" name="latitude" value={latitude || undefined} />
-        <input type="hidden" name="longitude" value={longitude || undefined} />
+        <input
+          type="hidden"
+          name="latitude"
+          value={deviceLatitude || undefined}
+        />
+        <input
+          type="hidden"
+          name="longitude"
+          value={deviceLongitude || undefined}
+        />
         <div className="mb-1 relative">
           <Search className="absolute left-2 m-auto top-0 bottom-0 h-4 w-4 " />
           <Input
@@ -103,10 +114,10 @@ function PlanMap(props: Props) {
           <Map
             className="rounded-lg flex-1"
             zoom={15}
-            center={
-              latitude && longitude
-                ? { lat: latitude, lng: longitude }
-                : { lat: 0, lng: 0 }
+            defaultCenter={
+              deviceLatitude && deviceLongitude
+                ? { lat: deviceLatitude, lng: deviceLongitude }
+                : BARCELONA_LAT_LONG
             }
             gestureHandling={"greedy"}
             disableDefaultUI={true}

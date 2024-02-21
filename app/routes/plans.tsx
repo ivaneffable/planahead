@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, Outlet } from "@remix-run/react";
+import { Form, Link, Outlet, useOutletContext } from "@remix-run/react";
+import { useGeolocation } from "@uidotdev/usehooks";
 
 import { Button } from "~/components/ui/button";
 import { requireUserId } from "~/session.server";
@@ -11,6 +12,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function PlansPage() {
+  const { latitude, longitude } = useGeolocation();
   return (
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
@@ -28,8 +30,24 @@ export default function PlansPage() {
       </nav>
 
       <main className="flex h-full p-2">
-        <Outlet />
+        <Outlet
+          context={
+            {
+              deviceLatitude: latitude,
+              deviceLongitude: longitude,
+            } satisfies ContextType
+          }
+        />
       </main>
     </div>
   );
+}
+
+interface ContextType {
+  deviceLatitude: number | null;
+  deviceLongitude: number | null;
+}
+
+export function useDeviceGeolocation() {
+  return useOutletContext<ContextType>();
 }
