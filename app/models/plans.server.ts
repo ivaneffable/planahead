@@ -8,6 +8,11 @@ interface NewPlace {
   longitude: number;
 }
 
+interface PlanInfo {
+  date: Date;
+  tags: string[];
+}
+
 async function createOrUpdatePlace(newPlace: NewPlace) {
   const { placeId, name, address, latitude, longitude } = newPlace;
 
@@ -37,7 +42,38 @@ async function createOrUpdatePlace(newPlace: NewPlace) {
   return place;
 }
 
-export async function createPlan(newPlace: NewPlace, userId: string) {
+export async function getPlan({ id, userId }: { id: string; userId: string }) {
+  const plan = await prisma.plan.findFirst({
+    where: {
+      id,
+      userId,
+    },
+    select: {
+      date: true,
+      details: true,
+      tags: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      place: {
+        select: {
+          id: true,
+          name: true,
+          address: true,
+        },
+      },
+    },
+  });
+
+  return {
+    ...plan,
+    date: plan?.date?.toISOString() || null,
+  };
+}
+
+export async function createPlan(userId: string, newPlace: NewPlace) {
   const place = await createOrUpdatePlace(newPlace);
 
   return prisma.plan.create({
@@ -51,6 +87,39 @@ export async function createPlan(newPlace: NewPlace, userId: string) {
         connect: {
           id: place.id,
         },
+      },
+    },
+  });
+}
+
+export async function updatePlan(planId: string, planInfo: PlanInfo) {
+  const plan = await prisma.plan.findFirst({
+    where: { id: planId },
+    select: {
+      date: true,
+      details: true,
+      tags: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+  const tags = plan?.tags;
+  const plansToCreate = planInfo.tags.filter(
+    (tag) => tags?.every((t) => t.name !== tag),
+  );
+
+  return prisma.plan.update({
+    where: { id: planId },
+    data: {
+      date: planInfo.date,
+      tags: {
+        connectOrCreate: plansToCreate.map((tag) => ({
+          where: { name: tag },
+          create: { name: tag },
+        })),
       },
     },
   });

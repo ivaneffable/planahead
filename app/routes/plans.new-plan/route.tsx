@@ -23,16 +23,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (!placeId || !name || !address || !latitude || !longitude) {
       return json({ status: 400, places: [] });
     }
-    const { id } = await createPlan(
-      {
-        placeId,
-        name,
-        address,
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude),
-      },
-      userId,
-    );
+    const { id } = await createPlan(userId, {
+      placeId,
+      name,
+      address,
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+    });
 
     return redirect(`/plans/${id}`);
   }
