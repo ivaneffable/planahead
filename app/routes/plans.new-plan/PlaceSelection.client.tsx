@@ -162,17 +162,8 @@ function PlanMap(props: Props) {
             className="px-4 py-2 m-1 w-1/2 text-lg"
             name="_action"
             value="add-place"
-            variant="secondary"
           >
-            Add Plan
-          </Button>
-          <Button
-            disabled={!selectedPlace}
-            className="px-4 py-2 m-1 w-1/2 text-lg"
-            name="_action"
-            value="add-place"
-          >
-            More Details
+            Next
           </Button>
         </div>
       </Form>

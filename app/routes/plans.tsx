@@ -16,6 +16,9 @@ export default function PlansPage() {
   return (
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
+        <nav className="flex items-center justify-between bg-slate-700 p-2">
+          <Link to="new-plan">New Plan</Link>
+        </nav>
         <h1 className="text-3xl font-bold">
           <Link to=".">PlanAhead</Link>
         </h1>
@@ -25,11 +28,7 @@ export default function PlansPage() {
         </Form>
       </header>
 
-      <nav className="flex items-center justify-between bg-slate-700 p-2">
-        <Link to="new-plan">New Plan</Link>
-      </nav>
-
-      <main className="flex h-full p-2">
+      <main className="flex h-full max-h-full p-2">
         <Outlet
           context={
             {
