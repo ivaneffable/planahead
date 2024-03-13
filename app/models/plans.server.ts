@@ -42,6 +42,34 @@ async function createOrUpdatePlace(newPlace: NewPlace) {
   return place;
 }
 
+export async function getPlans(userId: string, type: "new" | "old" = "new") {
+  const plans = await prisma.plan.findMany({
+    where: {
+      userId,
+      date: type === "new" ? { gte: new Date() } : { lt: new Date() },
+    },
+    select: {
+      id: true,
+      date: true,
+      place: {
+        select: {
+          id: true,
+          name: true,
+          address: true,
+        },
+      },
+    },
+    orderBy: {
+      date: "asc",
+    },
+  });
+
+  return plans.map((plan) => ({
+    ...plan,
+    date: plan.date?.toISOString() || null,
+  }));
+}
+
 export async function getPlan({ id, userId }: { id: string; userId: string }) {
   const plan = await prisma.plan.findFirst({
     where: {
