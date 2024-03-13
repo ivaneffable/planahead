@@ -35,13 +35,13 @@ export default function PlanList() {
             printMonth = true;
           }
 
-          let margin = 0;
+          let margin = "mt-0";
           if (index !== 0) {
-            margin = printMonth ? 3 : 1;
+            margin = printMonth ? "mt-3" : "mt-1";
           }
 
           return (
-            <div key={plan.id} className={`mt-${margin}`}>
+            <div key={plan.id} className={margin}>
               <div className="text-2xl font-bold">
                 {printMonth ? lastMonth : null}
               </div>
