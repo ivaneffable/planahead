@@ -54,6 +54,13 @@ export default function NewPlanPlace() {
   );
   const [tags, setTags] = useState<string[]>([]);
 
+  const formatedDate = date
+    ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+        2,
+        "0",
+      )}-${String(date.getDate()).padStart(2, "0")}`
+    : "";
+
   return (
     <div className="flex flex-col justify-between items-center w-full">
       <div className="flex flex-col items-center w-full">
@@ -64,6 +71,7 @@ export default function NewPlanPlace() {
           </CardContent>
         </Card>
         <Calendar
+          ISOWeek
           mode="single"
           captionLayout="dropdown"
           selected={date}
@@ -122,7 +130,7 @@ export default function NewPlanPlace() {
           <div className="text-lg">No tags...</div>
         )}
         <Form method="post" className="w-full mt-2">
-          <input type="hidden" name="date" value={date?.toISOString()} />
+          <input type="hidden" name="date" value={formatedDate} />
           <input type="hidden" name="tags" value={tags.join("|")} />
           <div className="flex justify-around">
             <Button className="px-4 py-2 m-1 w-1/2 text-lg">Create</Button>
